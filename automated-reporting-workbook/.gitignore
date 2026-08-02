@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+*.pdf
+
+# NOTE: the sample sales_report.xlsx / sales_report.html in /reports ARE
+# committed on purpose, so anyone opening the repo can see the output
+# without running anything. If you regenerate the report with different
+# data, just `git add reports/` to update them.
+

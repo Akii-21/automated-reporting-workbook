@@ -1,0 +1,41 @@
+name: Generate Report
+
+on:
+  push:
+    paths:
+      - "data/**"
+      - "src/**"
+      - "generate_report.py"
+      - "config.yaml"
+  workflow_dispatch: {}
+  schedule:
+    # Every Monday 06:00 UTC — simulates a recurring "weekly reporting" job
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  build-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate report
+        run: python generate_report.py --input data/sample_sales_data.csv
+
+      - name: Commit updated report artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git diff --cached --quiet || git commit -m "Auto-update generated report [skip ci]"
+          git push
